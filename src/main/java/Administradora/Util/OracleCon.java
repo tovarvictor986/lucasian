@@ -5,9 +5,9 @@ import java.sql.*;
 import Administradora.Models.Administradora;
 
 public class OracleCon {
-	public String user = "system";
-	public String pass = "poderoso2019";
-	public String jdbc = "jdbc:oracle:thin:@localhost:1521:xe";
+	public String user = Constants.user;
+	public String pass = Constants.pass;
+	public String jdbc = Constants.jdbc;
 	
 	public OracleCon() {
 		super();
@@ -46,12 +46,10 @@ public class OracleCon {
 			}
 			con.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}			
 		return rs;
-	}
-	
+	}	
 	
 	public ResultSet queryInsertt(Administradora administradora) {
 		Connection con = connect();
@@ -59,8 +57,9 @@ public class OracleCon {
 		ResultSet rs = null;
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("INSERT INTO ADMINISTRADORA.ADMINISTRADORA " + 
-					"(CODIGO, "
+			String query = "INSERT INTO ADMINISTRADORA.ADMINISTRADORA " + 
+					"(ID, "
+					+ "CODIGO, "
 					+ " NOMBRE, "
 					+ " COD_TP_ID, "
 					+ " NRO_ID, "
@@ -69,19 +68,20 @@ public class OracleCon {
 					+ " FSP, "
 					+ " FUSIONADA, "
 					+ " FECHA_FUSION)\r\n"  
-					+ " VALUES('"+administradora.getCodigo()+"',"
+					+ " VALUES(SEQ_ID_ADMINISTRADORA.NEXTVAL, '"+administradora.getCodigo()+"',"
 					+ "'"+administradora.getNombre()+"', "
 					+ "'"+administradora.getCodTpId()+"', "
 					+ "'"+administradora.getNroId()+"', "
 					+ "'"+administradora.getNaturaleza()+"', "
 					+ administradora.getMultipleARP()+","
 					+ administradora.getFsp()+","
-					+ administradora.getFusionada()+" "
-					+  "'"+administradora.getFechaFusion()+")");
+					+ administradora.getFusionada()+","
+					+  "'"+administradora.getFechaFusion()+"')";
+			System.out.println("query "+query);
+			rs = stmt.executeQuery(query);
 			
 			con.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}			
 		return rs;
